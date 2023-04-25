@@ -15,14 +15,18 @@ ProductRouter.get("/", (req, res) => {
 
 ProductRouter.post("/", (req, res) => {
     const data = req.body
-    Manager.addProduct(data)
-    res.status(201).send("Producto creado")
+    if(!data.tittle || !data.description || !data.price || !data.stock|| !data.category){
+        res.send("Faltan datos")
+    }else{
+        Manager.addProduct(data)
+        res.send("Producto creado")
+    }
 })
 
 ProductRouter.put("/:productid", (req, res) =>{
     const productid =req.params.productid
     const data= req.body
-    Manager.updateProd(productid, data)
+    Manager.updateProd(productid, data.prop, data.cambio)
     res.send("Producto actualizado")
 })
 
