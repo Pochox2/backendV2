@@ -2,10 +2,8 @@ import fs from "fs"
 
 class ProductManager {
     constructor() {
-        this.products = []
+        this.path= "./src/data/pro.json"
         this.index = 0
-        this.path= "../data/productos.json"
-        fs.writeFileSync(this.path, JSON.stringify(this.products, null, "\t" ))
     }
 
     getProducts = () => {

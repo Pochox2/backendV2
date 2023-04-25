@@ -1,68 +1,66 @@
-const fs= require("fs");
+import fs from "fs"
 
 
 class CartManager {
     constructor() {
-        this.products = []
-        this.index = 0
-        this.path= "./desafio2.json"
-        fs.writeFileSync(this.path, JSON.stringify(this.products, null, "\t" ))
+        this.path="./src/data/cart.json"
     }
 
-    getProducts = () => {
-        const listProduct = fs.readFileSync(this.path, "utf-8")
-        return (listProduct)
+    getCarts = () => {
+        const listCart = JSON.parse(fs.readFileSync(this.path, "utf-8"))
+        return (listCart)
     }
 
-    getProductsbyId(id) {
-        const productos = JSON.parse(fs.readFileSync(this.path, "utf-8"));
-        const product=productos.find((a) => a.id===id);
-        if(product) {
-            return product}
-        else {
-            console.log("El id no coincide con ningun producto");
-            return null;
+    getProductsCartId(cartid) {
+        const cart = this.getCartId(cartid)
+        if(cart === -1) {
+            return false }
+        return(cart.products)
+    }
+
+    getCartId = (cartid) => {
+        const carts = this.getCarts()
+        const cartElegido = carts.find(cart => cart.cartid === parseInt(cartid))
+        if (cartElegido) {
+            return cartElegido
         }
-    }
-
-    addProduct = (tittle, description, price, thumbnail, code, stock) => {
-        this.index++
-        const id = this.index
-        const newProduct = {id, tittle, description, price, thumbnail, code, stock}
-        if (!tittle || !description || !price || !thumbnail || !code || !stock) {
-            return console.error("Faltan datos")
-            } 
+        return 0 
         
-        const ProductRep = this.products.some((product) => product.code === code)
-            if (ProductRep) {
-                return console.error("El codigo del producto ya existe")
-            }  else {
-                this.products.push(newProduct)
-                fs.writeFileSync(this.path, JSON.stringify(this.products, null, "\t"))
-            }    
     }
 
-    removeProduct = (id) => {
-        const remove = this.products.findIndex(prod=>prod.id === id)
-        if (remove !== -1) {
-            this.products.splice(remove, 1)
-            fs.writeFileSync(this.path, JSON.stringify(this.products, null, "\t"))
+    IdGenerator = () => {
+        let carts = this.getCarts()
+        if(carts.lenght === 0) {
+            return 1
         }
-        else {
-            return console.log("El id no coincide con el de ningun producto")
-        }
+        return carts[carts.lenght-1].cartid +1
     }
 
-    updateProd = (id, prop, cambio) => {
-        const prodtoUpdate = this.products.findIndex(prod=>prod.id === id)
-        if (prodtoUpdate !== -1) {
-            this.products[prodtoUpdate][prop]=cambio
-            fs.writeFileSync(this.path, JSON.stringify(this.products, null, "\t"))
+    CartCreate = () => {
+        let carts = this.getCarts()
+        const cartid = parseInt(this.IdGenerator())
+        const cartNew = {cartid, products:[]}
+        carts.push(cartNew)
+        fs.writeFileSync(this.path, JSON.stringify(carts, null))
+        console.log("Carro creado")
+    }
+
+    addProductCart = () => {
+        let carts = this.getCarts()
+        const cartIndex = carts.findIndex(cart => cart.cartid == parseInt(cartid))
+        const prodIndex = carts[cartIndex].products.findIndex(p => p.prodid == parseInt(prodid))
+
+        if (prodIndex== -1) {
+            let productAdd={"prodid" : +prodid, "quantity":1}
+            carts[cartIndex].products.push(productAdd)
+        } else {
+            carts[cartIndex].products[prodIndex].quantity++
         }
-        else {
-            return console.log("El id no coincide con el de ningun producto")
-        }
+        fs.writeFileSync(this.path, JSON.stringify(carts, null))
+        console.log("Producto agregado al carrito")
     }
 
 }
+
+export default CartManager
 

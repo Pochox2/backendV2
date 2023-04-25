@@ -1,11 +1,12 @@
-import { express } from "express";
-import ProductRouter from "./Routers/productsRouter";
-// import CartRouter from "./Routers/cartsRouter";import { NextFunction } from "express"
-
+import  express  from "express";
+import ProductRouter from "./Routers/productsRouter.js";
+import CartRouter from "./Routers/cartsRouter.js";
 const app = express();
+
+app.use(express.json())
 
 app.use("/api/products", ProductRouter)
 
-// app.use("/api/carts", CartRouter)
+app.use("/api/carts", CartRouter)
 
-app.lister(8080, () => console.log ("Server up"))
+app.listen(8080, () => console.log ("Server up"))
