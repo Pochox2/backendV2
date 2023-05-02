@@ -43,7 +43,7 @@ class ProductManager {
         do {
             code = this.codeGenerator()
             code1 = products.find(p => p.code) == code
-        } while (auxCode != undefined)
+        } while (code1 != undefined)
         return code
     }
 
@@ -69,19 +69,27 @@ class ProductManager {
         }
         else {
             return console.log("El id no coincide con el de ningun producto")
-        }}
+        }
+    }
 
     
 
-    updateProd = (id, prop, cambio) => {
-        products = this.getProducts()
-        const prodtoUpdate = products.findIndex(prod=>prod.id === id)
-        if (prodtoUpdate !== -1) {
-            this.products[prodtoUpdate][prop]=cambio
-            fs.writeFileSync(this.path, JSON.stringify(this.products, null, "\t"))
-        }
-        else {
-            return console.log("El id no coincide con el de ningun producto")
+    updateProd = (prodid, data) => {
+        let products = this.getProducts()
+        const prodtoUpdate = products.findIndex(prod=>prod.id == prodid)
+        const prod = this.getProductsbyId(prodid)
+
+
+        if (prod.id == prodid) {
+           if (prodtoUpdate != 1) {
+            products[prodtoUpdate]={...products[prodtoUpdate], ...data}
+            fs.writeFileSync(this.path, JSON.stringify(products, null, 2))
+            console.log("El producto ha sido actualizado") 
+           } else {
+                console.log("El id no coincide con el de ningun producto")
+           }
+        }else {
+             console.log("No pudo haber modificaciones")
         }
     }
 

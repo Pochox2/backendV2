@@ -1,0 +1,24 @@
+<section>
+<h1 class="">Productos</h1>
+<div class="">
+    <div class="">
+{{#each ProdList}}
+        
+    <div class="">
+        <div class="">
+        <img src={{this.thumbnail}} class="" alt={{this.title}}>
+        <h5 class="">{{this.title}}</h5>
+        <div class="">
+            <p class="">{{this.description}}</p>
+            <p class="">Precio:${{this.price}}</p>
+            <div class="">
+                <a href="#" class="">Añadir al carrito</a>
+            </div>
+        </div>
+        </div>
+        </div>
+{{/each}}
+    </div>
+</div>
+
+</section>

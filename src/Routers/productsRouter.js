@@ -23,10 +23,10 @@ ProductRouter.post("/", (req, res) => {
     }
 })
 
-ProductRouter.put("/:productid", (req, res) =>{
-    const productid =req.params.productid
+ProductRouter.put("/:prodid", (req, res) =>{
+    const prodid= req.params.prodid
     const data= req.body
-    Manager.updateProd(productid, data.prop, data.cambio)
+    Manager.updateProd(prodid, data)
     res.send("Producto actualizado")
 })
 

@@ -5,6 +5,7 @@
 		"description": "Botella de Coca cola de 500ml",
 		"price": 200,
 		"thumbnail": "img/coca",
+		"category": "Bebidas",
 		"code": "0a",
         "status": true,
 		"stock": 10
@@ -15,6 +16,7 @@
 		"description": "Botella de Coca cola de 500ml",
 		"price": 200,
 		"thumbnail": "img/coca0",
+		"category": "Bebidas",
 		"code": "0b",
         "status": true,
 		"stock": 10

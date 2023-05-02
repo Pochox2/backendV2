@@ -13,7 +13,7 @@ class CartManager {
 
     getProductsCartId(cartid) {
         const cart = this.getCartId(cartid)
-        if(cart === -1) {
+        if(cart == -1) {
             return false }
         return(cart.products)
     }
@@ -28,24 +28,22 @@ class CartManager {
         
     }
 
-    IdGenerator = () => {
-        let carts = this.getCarts()
-        if(carts.lenght === 0) {
-            return 1
-        }
-        return carts[carts.lenght-1].cartid +1
+    generateId= ()=>{
+        let list= this.getCarts()
+        if(list.length === 0) return 1
+        return list[list.length-1].cartid +1
     }
 
     CartCreate = () => {
         let carts = this.getCarts()
-        const cartid = parseInt(this.IdGenerator())
+        const cartid = parseInt(this.generateId())
         const cartNew = {cartid, products:[]}
         carts.push(cartNew)
         fs.writeFileSync(this.path, JSON.stringify(carts, null))
         console.log("Carro creado")
     }
 
-    addProductCart = () => {
+    addProductCart = (cartid, prodid) => {
         let carts = this.getCarts()
         const cartIndex = carts.findIndex(cart => cart.cartid == parseInt(cartid))
         const prodIndex = carts[cartIndex].products.findIndex(p => p.prodid == parseInt(prodid))

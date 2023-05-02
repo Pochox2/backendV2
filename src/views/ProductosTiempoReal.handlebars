@@ -1,0 +1,15 @@
+<h1>Productos en tiempo real</h1>
+
+<div id="ListDiv"></div>
+
+<form action="/productostiemporeal" method="post">
+    Titulo:<input type="text" name="tittle"><br>
+    Categoria: <input type="text" name="category"><br>
+    Descripcion:<input type="text" name="description"><br>
+    Stock: <input type="number" name="stock"><br>
+    Precio: <input type="number" name="price"><br>
+    <button type="submit" id="createProd">Crear producto</button> 
+</form>
+
+<script src="/socket.io/socket.io.js"></script> 
+<script src="/public/socket/ClienteSocket.js"></script>
