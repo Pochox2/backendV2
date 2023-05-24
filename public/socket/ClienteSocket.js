@@ -7,15 +7,15 @@ ProductCreate.addEventListener("onClick", RevList())
 
 const imprimirList= (data) => {
     let ListDiv = document.getElementById("ListDiv")
-    data.foreach(producto => {
+    data.foreach(product => {
         const DivCard= ` <div class="DivCard">
-        <img src=${producto.thumbnail} class="card-img-top" alt="${producto.title}">
-        <h3>${producto.title}</h3>
+        <img src=${product.thumbnail} class="card-img-top" alt="${product.tittle}">
+        <h3>${product.tittle}</h3>
         <div>
-        <p>${producto.category}</p>
-        <p>${producto.description}</p>
-        <p>${producto.stock}</p>
-        <h4>Precio: $ ${producto.price}</h4>
+        <p>${product.category}</p>
+        <p>${product.description}</p>
+        <p>${product.stock}</p>
+        <h4>Precio: $ ${product.price}</h4>
         </div>
       </div>`; 
       ListDiv.innerHTML= DivCard;
@@ -25,10 +25,10 @@ const imprimirList= (data) => {
 
 const RevList= () => {
     let ProdList=Manager.getProducts()
-    ClienteSocket.emit("ProdList", {ProdList})
+    ClienteSocket.emit("ProductList", {ProdList})
 }
 
-ClienteSocket.on("ProdList", ProdList => {
+ClienteSocket.on("ProductList", ProdList => {
     imprimirList(ProdList)
 })
 

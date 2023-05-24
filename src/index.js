@@ -3,12 +3,12 @@ import handlebars  from "express-handlebars";
 import ProductRouter from "./Routers/productsRouter.js";
 import CartRouter from "./Routers/cartsRouter.js";
 import VistasRouter from "./Routers/vistasRouter.js";
-import RtpRouter from "./Routers/rtpRouter.js";
+import router from "./Routers/rtpRouter.js";
 import __dirname from "./utils.js"
 import { Server } from "socket.io";
 const app = express();
 app.engine("handlebars", handlebars.engine())
-app.set("vistas", __dirname+"/views")
+app.set("views", __dirname+"/views")
 app.set("view engine", "handlebars")
 
 app.use(express.json())
@@ -19,7 +19,7 @@ app.use("/api/carts", CartRouter)
 
 app.use("/", VistasRouter)
 
-app.use("/productosentiemporeal", RtpRouter)
+app.use("/realtimeproducts", router)
 
 
 
