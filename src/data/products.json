@@ -1,23 +1,64 @@
 [
-	{
-		"id": 1,
-		"tittle": "Coca Cola",
-		"description": "Botella de Coca cola de 500ml",
-		"price": 200,
-		"thumbnail": "img/coca",
-		"category": "Bebidas",
-		"code": "0a",
+    {
+        "pid": 1,
+        "tittle": "Collar azul",
+        "description":"Collar azul muy combinable con todo.",
+        "price":1000,
+        "category":"COLLARES",
         "status": true,
-		"stock": 10
-	},
-	{
-		"id": 2,
-		"tittle": "Coca Cola zero",
-		"description": "Botella de Coca cola de 500ml",
-		"price": 200,
-		"thumbnail": "img/coca0",
-		"category": "Bebidas",
-		"code": "0b",
+        "thumbnail":"../../public/img/collarazul.jpeg", 
+        "code":"AKJ2K1",
+        "stock":10
+    },
+    {
+        "pid":2,
+        "tittle": "Collar ojo turco azul",
+        "description":"El mejor collar para aumentar valentia y combatir las malas vibras.",
+        "price":1150,
+        "category":"COLLARES",
         "status": true,
-		"stock": 10
-	}]
+        "thumbnail":"../../public/img/collojoazul.jpeg", 
+        "code":"AD6FSG",
+        "stock":16
+    },
+    {
+        "pid":3,
+        "tittle": "Combo 2 pulseras",
+        "description":"Combo dos pulseras.",
+        "price":1400,
+        "category":"PULSERAS",
+        "status": true,
+        "thumbnail":"../../public/img/combo2p.jpeg", 
+        "code":"AXCB55",
+        "stock":9
+    },{
+        "pid":4,
+        "tittle": "Combo 2 pulseras",
+        "description":"Combo 2 pulseras.",
+        "price":1500,
+        "category":"PULSERAS",
+        "status": true,
+        "thumbnail":"../../public/img/combo2pp.jpeg", 
+        "code":"K56FHA",
+        "stock":20
+		},{
+			"pid":5,
+			"tittle": "Combo 5 pulseras",
+			"description":"Combo",
+			"price":2500,
+			"category":"PULSERAS",
+			"status": true,
+			"thumbnail":"../../public/img/combo5p.jpeg", 
+			"code":"64QWER",
+        	"stock":9
+    },{
+        "pid":6,
+        "tittle": "Combo argentina",
+        "description":"Combo 3 collares ambientacion argentina",
+        "price":2022,
+        "category":"COLLARES",
+        "status": true,
+        "thumbnail":"../../public/img/combo3c.jpeg", 
+        "code":"Y65YRT",
+        "stock":11
+    }]

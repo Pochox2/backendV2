@@ -2,23 +2,37 @@
 <h1 class="">Productos</h1>
 <div class="">
     <div class="">
-{{#each ProdList}}
+        {{#each docs}}
         
-    <div class="">
-        <div class="">
-        <img src={{this.thumbnail}} class="" alt={{this.tittle}}>
-        <h5 class="">{{this.tittle}}</h5>
-        <div class="">
-            <p class="">{{this.description}}</p>
-            <p class="">Precio:${{this.price}}</p>
             <div class="">
-                <a href="#" class="">Añadir al carrito</a>
+                <div class="">
+                <img src={{this.thumbnail}} class="" alt={{this.tittle}}>
+                <h5 class="">{{this.tittle}}</h5>
+                    <div class="">
+                    <p class="">{{this.description}}</p>
+                    <p class="">Precio:${{this.price}}</p>
+                        <div class="">
+                        <a href="/api/products/{{this.id}}" class="">Detalles</a>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
-        </div>
-        </div>
-{{/each}}
+        {{/each}}
+    </div>
+    <div class="">
+        {{#if hasPrevPage}}
+        <a class="" href="{{prevLink}}">Pagina anterior</a>
+        {{else}}
+        <button class="" disabled>Previous page</button>
+        {{/if}}
+            {{#if hasNextPage}}
+            <a class="" href="{{nextLink}}">Siguiente pagina</a>
+        {{else}}
+            <button  class="" disabled>Siguiente pagina</button>
+        {{/if}}
     </div>
 </div>
 
 </section>
+<script src="/socket.io/socket.io.js"></script>
+<script src="../../public/socket/ClienteSocket.js"></script>

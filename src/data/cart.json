@@ -1,1 +1,1 @@
-[{"cartid":1,"products":[{"prodid":1,"quantity":1},{"prodid":3,"quantity":1}]},{"cartid":2,"products":[{"prodid":2,"quantity":2}]},{"cartid":3,"products":[{"prodid":2,"quantity":2}]}]
+[{"cid":1,"products":[{"pid":1,"quantity":1},{"pid":3,"quantity":1}]},{"cid":2,"products":[{"pid":2,"quantity":2}]},{"cid":3,"products":[{"pid":2,"quantity":2}]}]

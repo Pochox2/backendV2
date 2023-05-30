@@ -4,42 +4,49 @@ import ProductManager from "../Managers/ProductManager.js";
 const ProductRouter = Router()
 const Manager = new ProductManager()
 
-ProductRouter.get("/", (req, res) => {
-    const limite = req.query.limite
-    let lista = Manager.getProducts()
-    if(limite) {
-        lista = lista.slice(0, limite)
-    }
-    res.send(lista)
+ProductRouter.get("/", async (req, res) => {
+    let limit = req.query.limit
+    if(!limit) limit=10
+    let page = req.query.page
+    if(!page) page=1
+    const category = req.query.category
+    const sort = req.query.sort
+
+    const resultado = await Manager.getProductsPaginated(limit, page, category, sort)
+    console.log(resultado)
+    resultado.prevLink = resultado.hasPrevPage ? `/api/products/?limit=${limit}&page=${resultado.prevPage}` : ''
+    resultado.nextLink = resultado.hasNextPage ? `/api/products/?limit=${limit}&page=${resultado.nextPage}` : ''
+    res.render('home', resultado)
 })
 
-ProductRouter.post("/", (req, res) => {
+ProductRouter.get("/:pid", async (req, res) =>{
+    const pid =req.params.pid
+    const product= await Manager.getProductsbyId(pid)
+    res.render("detalles", {product})
+})
+
+ProductRouter.post("/", async (req, res) => {
     const data = req.body
     if(!data.tittle || !data.description || !data.price || !data.stock|| !data.category){
         res.send("Faltan datos")
     }else{
-        Manager.addProduct(data)
+        await Manager.addProduct(data)
         res.send("Producto creado")
     }
 })
 
-ProductRouter.put("/:prodid", (req, res) =>{
-    const prodid= req.params.prodid
+ProductRouter.put("/:pid", async (req, res) =>{
+    const pid= req.params.pid
     const data= req.body
-    Manager.updateProd(prodid, data)
+    await Manager.updateProd(pid, data)
     res.send("Producto actualizado")
 })
 
-ProductRouter.delete("/:productid", (req, res) => {
-    const productid=req.params.productid
-    Manager.removeProduct(productid)
+ProductRouter.delete("/:pid", async (req, res) => {
+    const pid=req.params.pid
+    await Manager.removeProduct(pid)
     res.send("Producto eliminado")
 })
 
-ProductRouter.get("/:productid", (req, res) =>{
-    const productid =req.params.productid
-    const product=Manager.getProductsbyId(+productid)
-    res.send(product)
-})
 
 export default ProductRouter   

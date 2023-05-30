@@ -1,64 +1,103 @@
-import fs from "fs"
+import cartsModel from "../models/carritomodel.js"
 
 
 class CartManager {
-    constructor() {
-        this.path="./src/data/cart.json"
-    }
+   
 
-    getCarts = () => {
-        const listCart = JSON.parse(fs.readFileSync(this.path, "utf-8"))
+    getCarts = async() => {
+        const listCart = await cartsModel.find({}).lean().exec()
         return (listCart)
     }
 
-    getProductsCartId(cartid) {
-        const cart = this.getCartId(cartid)
-        if(cart == -1) {
-            return false }
-        return(cart.products)
+    getProductsCartId = async(cid) => {
+        const cartAmostrar = await cartsModel.findOne({_id: cid}).populate("products.pid").lean().exec()
+        return (cartAmostrar)
     }
 
-    getCartId = (cartid) => {
-        const carts = this.getCarts()
-        const cartElegido = carts.find(cart => cart.cartid === parseInt(cartid))
-        if (cartElegido) {
-            return cartElegido
+    getCartId = async (cid) => {
+        try {
+        const cart = await cartsModel.paginate({_id: cid}, {
+            limit: 1,
+            page: 1,
+            lean: true
+        })
+        return (cart) 
+        } catch (err){
+            console.log(err)
         }
-        return 0 
-        
     }
 
-    generateId= ()=>{
-        let list= this.getCarts()
+    generateId= async () =>{
+        let list= await this.getCarts()
         if(list.length === 0) return 1
-        return list[list.length-1].cartid +1
+        return list[list.length-1].cid +1
     }
 
-    CartCreate = () => {
-        let carts = this.getCarts()
-        const cartid = parseInt(this.generateId())
-        const cartNew = {cartid, products:[]}
-        carts.push(cartNew)
-        fs.writeFileSync(this.path, JSON.stringify(carts, null))
-        console.log("Carro creado")
+    CartCreate = async () => {
+        const cartNew = { products:[]}
+        const cartGenerado = new cartsModel(cartNew)
+        await cartGenerado.save()
+        return cartGenerado
     }
 
-    addProductCart = (cartid, prodid) => {
-        let carts = this.getCarts()
-        const cartIndex = carts.findIndex(cart => cart.cartid == parseInt(cartid))
-        const prodIndex = carts[cartIndex].products.findIndex(p => p.prodid == parseInt(prodid))
+    addProductCart = async (cid, pid) => {
+        const cartElegido = await cartsModel.findOne({_id: cid})
+        const repetido = cartElegido.products.find(y => y.pid == pid)
 
-        if (prodIndex== -1) {
-            let productAdd={"prodid" : +prodid, "quantity":1}
-            carts[cartIndex].products.push(productAdd)
+        if (repetido != undefined) {
+            repetido.quantity++
         } else {
-            carts[cartIndex].products[prodIndex].quantity++
-        }
-        fs.writeFileSync(this.path, JSON.stringify(carts, null))
-        console.log("Producto agregado al carrito")
+            cartElegido.products.push({ 
+                pid: pid,
+                quantity: 1})}
+       const resultado = await cartsModel.updateOne({_id : cid}, cartElegido)
+       console.log(resultado)
+       console.log(`Producto ${pid} añadido al carrito ${cid}`)
+    }
+    
+
+
+    removeCart= async(cid)=>{
+        const removed= await cartsModel.removeCart({_id:cid})
+        console.log(removed)
     }
 
+    removeProductFromCart= async(cid, pid)=>{
+        const cartElegido= await cartsModel.findOne({_id: cid})
+        const productToRemove= cartElegido.products.find(y => y.pid == pid)
+        const idx= cartElegido.products.findIndex(y => y.pid == pid)
+        if(productToRemove.quantity > 1){
+            productToRemove.quantity = productToRemove.quantity-1
+        }else{
+            cartElegido.products.splice(idx, 1)
+        }
+        const resultado= await cartsModel.updateOne({_id:cid}, cartElegido)
+        console.log(`Producto ${pid} eliminado del carrito ${cid}`)
+        console.log(resultado)
+    }
+    updateCart= async(cid, newData)=>{
+        const cartToUpdate= await cartsModel.findOne({_id:cid})
+        cartToUpdate.products=[]
+        cartToUpdate.products.push(newData)
+        const resultado= await cartsModel.updateOne({_id:cid}, cartToUpdate)
+        console.log(resultado)
+    }
+    updateProductQty= async(cid, pid, newQty)=>{
+        const cartToUpdate= await cartsModel.findOne({_id:cid})
+        const productIdy = cartToUpdate.products.findIndex(y => y.pid == pid)
+        cartToUpdate.products.splice(productIdy, 1)
+        cartToUpdate.products.push({
+            pid: pid,
+            quantity: newQty
+        })
+        const resultado= await cartsModel.updateOne({_id:cid}, cartToUpdate)
+        console.log(resultado)
+    }
 }
+
+    
+
+
 
 export default CartManager
 

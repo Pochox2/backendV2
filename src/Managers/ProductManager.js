@@ -1,28 +1,65 @@
-import fs from "fs"
+import productsModel from "../models/productsmodel.js"
 
 class ProductManager {
-    constructor() {
-        this.path= "./src/data/products.json"
-        this.index = 0
+
+    getProductsPaginated = async (limit, page, category, sort) => {
+        try {
+            if(category){
+                if(sort) {
+                    const resultado = await productsModel.paginate({category:category}, {
+                        limit: limit,
+                        page: page,
+                        lean: true,
+                        sort: {price: sort}
+                    })
+                    return (resultado);
+                } else {
+                    const resultado = await productsModel.paginate({category:category}, {
+                        limit: limit, 
+                        page: page,
+                        lean: true
+                    })
+                    return (resultado);
+                }
+            } else {
+                if (sort) {
+                    const resultado = await productsModel.paginate({}, {
+                        limit: limit,
+                        page: parseInt(page),
+                        lean: true,
+                        sort: {price:sort}
+                    })
+                    return (resultado)
+                } else {
+                    const resultado = await productsModel.paginate({}, {
+                        limit: limit,
+                        page: parseInt(page),
+                        lean: true
+                    })
+                    return (resultado);
+                }
+            }
+        } catch (err) {
+            console.log(err)
+        }
     }
 
-    getProducts = () => {
-        const listProduct = JSON.parse(fs.readFileSync(this.path, "utf-8"))
+    getProducts = async () => {
+        const listProduct = await productsModel.find({}).lean().exec()
         return (listProduct)
     }
 
-    getProductsbyId(id) {
+    getProductsbyId = async (pid) => {
         try {
-        const productos = JSON.parse(fs.readFileSync(this.path, "utf-8"));
-        const product=productos.find((a) => a.id===id);
+        const product = await productsModel.findOne({_id: pid}).lean().exec()
         if(product) {
             return product}
         else {
             console.log("El id no coincide con ningun producto");
             return null;
         }}
-        catch(error) {
-            console.error(error)
+        catch(err) {
+            console.error(err)
         }
 
     }
@@ -36,61 +73,49 @@ class ProductManager {
         return string
     }
 
-    codeValidator = () => {
-        const products = this.getProducts()
+    idGenerator = async() => {
+        let list = await this.getProducts()
+        if (list.length === 0) return 1
+        return list[list.length - 1].pid + 1
+    }
+
+    codeValidator = async () => {
+        const products = await this.getProducts()
         let code;
         let code1;
         do {
             code = this.codeGenerator()
-            code1 = products.find(p => p.code) == code
+            code1 = products.find(p => p.code == code)
         } while (code1 != undefined)
         return code
     }
 
-    addProduct = (tittle, description, price, category, stock, thumbnail) => {
-        this.index++
-        const id = this.index
-        let products = this.getProducts()
-        const code = this.codeValidator()
-        thumbnail ? thumbnail : thumbnail="vacio"
-        const newProduct = {id, tittle, description, code, price, category, status:true, stock, thumbnail}        
-        products.push(newProduct)
-        fs.writeFileSync(this.path, JSON.stringify(products, null))
-        console.log("Producto creado")
-    }
+    addProduct = async  ({tittle, description, price, category, stock, thumbnail}) => {
+        try {
+        const pid = await this.idGenerator()
+        const code = await this.codeValidator()
+        const productNew = {pid, tittle, description, price, category, status:true, stock, thumbnail, code}
+        const productGenerado= new productsModel(productNew)
+        await productGenerado.save()
+        console.log(`Producto ${tittle} creado`)
+    } catch (err) {
+        console.log(err)
+    }}
 
-    removeProduct = (id) => {
+    removeProduct = async (pid) => {
 
-        const remove = this.getProductsbyId(id)
-        let products = this.getProducts()
-        if (remove !== -1) {
-            this.products.splice(remove, 1)
-            fs.writeFileSync(this.path, JSON.stringify(this.products, null, "\t"))
-        }
-        else {
-            return console.log("El id no coincide con el de ningun producto")
+        try {
+            await productsModel.deleteOne({pid: pid})
+            console.log(`Producto ${pid} eliminado`)
+        } catch (err) {
+            console.log(err)
         }
     }
 
     
 
-    updateProd = (prodid, data) => {
-        let products = this.getProducts()
-        const prodtoUpdate = products.findIndex(prod=>prod.id == prodid)
-        const prod = this.getProductsbyId(prodid)
-
-
-        if (prod.id == prodid) {
-           if (prodtoUpdate != 1) {
-            products[prodtoUpdate]={...products[prodtoUpdate], ...data}
-            fs.writeFileSync(this.path, JSON.stringify(products, null, 2))
-            console.log("El producto ha sido actualizado") 
-           } else {
-                console.log("El id no coincide con el de ningun producto")
-           }
-        }else {
-             console.log("No pudo haber modificaciones")
-        }
+    updateProd = async (pid, data) => {
+        await productsModel.updateOne({pid: pid}, {...data})
     }
 
 }

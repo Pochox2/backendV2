@@ -1,33 +1,32 @@
-import  express  from "express";
+import mongoose from "mongoose";
 import handlebars  from "express-handlebars";
+import  express  from "express";
+
+
 import ProductRouter from "./Routers/productsRouter.js";
 import CartRouter from "./Routers/cartsRouter.js";
 import VistasRouter from "./Routers/vistasRouter.js";
-import router from "./Routers/rtpRouter.js";
-import __dirname from "./utils.js"
-import { Server } from "socket.io";
+
+mongoose.set("strictQuery", false)
 const app = express();
-app.engine("handlebars", handlebars.engine())
-app.set("views", __dirname+"/views")
-app.set("view engine", "handlebars")
+const ur = "mongodb+srv://leooinsua79:quimtech29@quartz.qk2xdtr.mongodb.net/"
 
 app.use(express.json())
+app.use(express.urlencoded({extended:true}))
+
 
 app.use("/api/products", ProductRouter)
-
 app.use("/api/carts", CartRouter)
-
 app.use("/", VistasRouter)
 
-app.use("/realtimeproducts", router)
+app.engine("handlebars", handlebars.engine())
+app.set("views", "./src/views")
+app.set("view engine", "handlebars")
 
-
-
-const httpServer = app.listen(8080, ()=> console.log ("Server up"))
-const ServerSocket = new Server (httpServer)
-ServerSocket.on("connection", socketClient => {
-    socketClient.on("ProdList", ProdList => {
-        ServerSocket.emit(ProdList)
-    })
-})
-
+try {
+    await mongoose.connect(ur)
+    console.log("Mongo conectado")
+    app.listen(8080, ()=> console.log("Server up"))
+} catch(err) {
+    console.log(err)
+}
