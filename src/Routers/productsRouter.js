@@ -5,18 +5,13 @@ const ProductRouter = Router()
 const Manager = new ProductManager()
 
 ProductRouter.get("/", async (req, res) => {
-    let limit = req.query.limit
-    if(!limit) limit=10
-    let page = req.query.page
-    if(!page) page=1
-    const category = req.query.category
-    const sort = req.query.sort
 
-    const resultado = await Manager.getProductsPaginated(limit, page, category, sort)
+
+    const resultado = await Manager.getProductsPaginated(100)
     console.log(resultado)
-    resultado.prevLink = resultado.hasPrevPage ? `/api/products/?limit=${limit}&page=${resultado.prevPage}` : ''
-    resultado.nextLink = resultado.hasNextPage ? `/api/products/?limit=${limit}&page=${resultado.nextPage}` : ''
-    res.render('home', resultado)
+    resultado.prevLink = resultado.hasPrevPage ? `/?page=${resultado.prevPage}` : ''
+    resultado.nextLink = resultado.hasNextPage ? `/?page=${resultado.nextPage}` : ''
+    res.json(resultado)
 })
 
 ProductRouter.get("/:pid", async (req, res) =>{
