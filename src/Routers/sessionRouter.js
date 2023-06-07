@@ -16,7 +16,7 @@ router.post("/register",  async (req, res)=> {
     }
     const user = new userModel(data)
     await user.save()
-    res.redirect("session/login")
+    res.redirect("/session/login")
 })
 
 router.get("/login", async (req, res) => {

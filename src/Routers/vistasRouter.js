@@ -2,7 +2,7 @@ import { Router } from "express";
 import ProductManager from "../Managers/ProductManager.js";
 import CartManager from "../Managers/CartManager.js";
 import handlebars from "express-handlebars";
-import session from "express-session"
+import session from "express-session";
 
 const VistasRouter = Router()
 const PManager = new ProductManager()
@@ -23,7 +23,7 @@ VistasRouter.get("/", async (req, res)=> {
     resultado.prevlink = resultado.hasPrevPage ? `/products/?limit=${limit}&page=${resultado.prevPage}` : ``
     resultado.nextlink = resultado.hasNextPage ? `/products/?limit=${limit}&page=${resultado.nextPage}` : ``
 
-    const user=req.session.user
+    const user = req.session.user
     res.render("home", {resultado, user})
 })
 
